@@ -89,5 +89,60 @@ public class JsoupOne {
 		Document doc = Jsoup.parse(input, "UTF-8", "http://example.com/");
 		System.out.println(doc);
 	}
-
+	@Test
+	public void getData() throws IOException{
+		File input = new File("tmp/input.html");
+		Document doc = Jsoup.parse(input, "UTF-8", "http://example.com/");
+		Element content = doc.getElementById("content");
+		Elements links = content.getElementsByTag("a");
+		for (Element link : links) {
+			  String linkHref = link.attr("href");
+			  System.out.print(linkHref);
+			  String linkText = link.text();
+			  System.out.println(linkText);
+			}
+		
+	}
+	@Test
+	public void getDataShuX(){
+		String html = "<p>An <a href='http://example.com/'><b>example</b></a> link.</p>";
+		Document doc = Jsoup.parse(html);//解析HTML字符串返回一个Document实现
+		Element link = doc.select("a").first();//查找第一个a元素
+		System.out.println(link);
+		
+		String text = doc.body().text(); // "An example link"//取得字符串中的文本
+		System.out.println(text);
+		String linkHref = link.attr("href"); // "http://example.com/"//取得链接地址
+		System.out.println(linkHref);
+		String linkText = link.text(); // "example""//取得链接地址中的文本
+		System.out.println(linkText);
+		String linkOuterH = link.outerHtml(); // "<a href="http://example.com"><b>example</b></a>"
+		System.out.println(linkOuterH);
+		String linkInnerH = link.html(); // "<b>example</b>"//取得链接内的html内容
+		System.out.println(linkInnerH);
+	}
+	@Test
+	public void getURLs() throws IOException{
+		Document doc = Jsoup.connect("http://www.open-open.com").get();
+		Element link = doc.select("a").first();
+		System.out.println(link);
+		String relHref = link.attr("href"); // == "/"
+		System.out.println(relHref);
+		String absHref = link.attr("abs:href"); // "http://www.open-open.com/"
+		System.out.println(absHref);
+	}
+	@Test
+	public void setAttr(){
+		String html = "<div class=comments><a>1</a><a>2</a></div>";
+		Document doc =Jsoup.parse(html);
+		doc.select("div.comments a").attr("rel", "nofollow");
+		System.out.println(doc);
+	}
+	@Test
+	public void setHtml(){
+		String html = "<div class=comments><a>1</a><a>2</a></div>";
+		Document doc =Jsoup.parse(html);
+		doc.select("div.comments a").attr("rel", "nofollow");
+		System.out.println(doc);
+	}
 }
