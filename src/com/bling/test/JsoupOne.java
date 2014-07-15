@@ -6,6 +6,7 @@ import java.io.IOException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.safety.Whitelist;
 import org.jsoup.select.Elements;
 import org.junit.Test;
 
@@ -140,9 +141,31 @@ public class JsoupOne {
 	}
 	@Test
 	public void setHtml(){
-		String html = "<div class=comments><a>1</a><a>2</a></div>";
+		String html = "<span></span><div class=comments><a>1</a><a>2</a></div>";
 		Document doc =Jsoup.parse(html);
-		doc.select("div.comments a").attr("rel", "nofollow");
+		Element div = doc.select("div").first(); // <div></div>
+		div.html("<p>lorem ipsum</p>"); // <div><p>lorem ipsum</p></div>
+		div.prepend("<p>First</p>");//在div前添加html内容
+		div.append("<p>Last</p>");//在div之后添加html内容
 		System.out.println(doc);
+		Element span = doc.select("span").first(); // <span>One</span>
+		span.wrap("<li><a href='http://example.com/'></a></li>");
+		System.out.println(doc);
+	}
+	@Test
+	public void setText(){
+		String html = "<span></span><div class=comments><a>1</a><a>2</a></div>";
+		Document doc =Jsoup.parse(html);
+		Element div = doc.select("div").first(); // <div></div>
+		div.text("5 > 4");
+		div.prepend("First");
+		div.append("Last");
+		System.out.println(div);
+	}
+	@Test
+	public void clearner(){
+		String unsafe = "<p><a href='http://example.com/' onclick='stealCookies()'>Link</a></p>";
+		String safe = Jsoup.clean(unsafe, Whitelist.basic());
+		System.out.println(safe);
 	}
 }
