@@ -66,7 +66,28 @@ public class JsoupOne {
 		System.out.println("masthead:"+masthead);
 		System.out.println("resultLinks:"+resultLinks);
 	}	
-	
-	
+	@Test
+	public void getBody(){
+		String html = "<div><p>Lorem ipsum.</p>";
+		Document doc = Jsoup.parseBodyFragment(html);
+		Element body = doc.body();
+		System.out.println(body);
+	}
+	@Test
+	public void getConnect() throws IOException{
+		Document doc = Jsoup.connect("http://example.com/").data("query", "Java")
+				  .userAgent("Mozilla")
+				  .cookie("auth", "token")
+				  .timeout(3000)
+				  .post();
+		String title = doc.title();
+		System.out.println(title);
+	}
+	@Test
+	public void getDcument() throws IOException{
+		File input = new File("tmp/input.html");
+		Document doc = Jsoup.parse(input, "UTF-8", "http://example.com/");
+		System.out.println(doc);
+	}
 
 }
